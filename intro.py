@@ -23,12 +23,11 @@ from mod_edad_concreta import edad
 
 
 def intro():
-
     st.sidebar.markdown('******')
 
     tipo_modelos = ["Female-Male", "Estimación de la edad en rangos", "Estimación de la edad"]
     modelos = st.sidebar.selectbox(label="Modelos",
-                                options=tipo_modelos)
+                                   options=tipo_modelos)
 
     if modelos == "Female-Male":
 
@@ -45,36 +44,34 @@ def intro():
         st.header(f"{choice}")
 
         if choice == "Información de los datos":
-
-
-             st.write("""Para nuestro proyecto, hemos utilizado los datos proporcionados por IMDB-WIKI. """
-                 "Estos datos, en principio, se han utilizado en proyectos anteriores, para generar modelos de estimación de edad. No obstante, cuando descargamos el contenido, las imágenes y CSVs no estaban clasificados correctamente, "
-                      "por lo que decidimos utilizarlos para generar un modelo Convolucional que clasificara solo entre mujer y hombre ")
-             st.markdown("""Se puede acceder a la información y datos a través del siguiente enlace: 
+            st.write("""Para nuestro proyecto, hemos utilizado los datos proporcionados por IMDB-WIKI. """
+                     "Estos datos, en principio, se han utilizado en proyectos anteriores, para generar modelos de estimación de edad. No obstante, cuando descargamos el contenido, las imágenes y CSVs no estaban clasificados correctamente, "
+                     "por lo que decidimos utilizarlos para generar un modelo Convolucional que clasificara solo entre mujer y hombre ")
+            st.markdown("""Se puede acceder a la información y datos a través del siguiente enlace: 
                             [Open IMDB-WIKI](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/).""")
-             st.write("Aquí mostramos la cantidad de imágenes que se han utilizado para realizar el modelo en las distintas fases de Train, Test y Validación")
-             df1 = pd.read_csv(
-                 "datos_f_m/datos_numero_fotos.csv")
+            st.write(
+                "Aquí mostramos la cantidad de imágenes que se han utilizado para realizar el modelo en las distintas fases de Train, Test y Validación")
+            df1 = pd.read_csv(
+                "datos_f_m/datos_numero_fotos.csv")
 
-             nuevos_nombres = {
-                 'cant_ima_entre_femenino': 'Entrenamiento imágenes mujer',
-                 'cant_ima_entre_masculino': 'Entrenamiento imágenes hombre',
-                 'cant_ima_val_femenino': 'Validación imágenes mujer',
-                 'cant_ima_val_masculino': 'Validación imágenes hombre',
-                 'cant_ima_test_femenino': 'Test imágenes mujer',
-                 'cant_ima_test_masculino': 'Test imágenes hombre'}
+            nuevos_nombres = {
+                'cant_ima_entre_femenino': 'Entrenamiento imágenes mujer',
+                'cant_ima_entre_masculino': 'Entrenamiento imágenes hombre',
+                'cant_ima_val_femenino': 'Validación imágenes mujer',
+                'cant_ima_val_masculino': 'Validación imágenes hombre',
+                'cant_ima_test_femenino': 'Test imágenes mujer',
+                'cant_ima_test_masculino': 'Test imágenes hombre'}
 
-             df1 = df1.rename(columns=nuevos_nombres)
+            df1 = df1.rename(columns=nuevos_nombres)
 
-             fig_bar = px.bar(data_frame=df1,
-                                  text_auto=True)
-             fig_bar.update_yaxes(categoryorder="total ascending")
-             fig_bar.update_xaxes(title_text="Representación imágenes usadas")
-             fig_bar.update_yaxes(title_text="")
-             st.plotly_chart(fig_bar)
+            fig_bar = px.bar(data_frame=df1,
+                             text_auto=True)
+            fig_bar.update_yaxes(categoryorder="total ascending")
+            fig_bar.update_xaxes(title_text="Representación imágenes usadas")
+            fig_bar.update_yaxes(title_text="")
+            st.plotly_chart(fig_bar)
 
         if choice == "Código del Modelo":
-
             st.write("Gestionamos las imágenes que vamos a pasar al modelo y realizamos en ellas ciertos ajustes:")
             code = """
                 nrows = 4
@@ -85,8 +82,8 @@ def intro():
                 """
             st.code(body=code, language="python")
 
-
-            st.write("Procedemos a crear nuestro modelo, empezando con las convolucionales en 32 y terminando con un clasficador binario:")
+            st.write(
+                "Procedemos a crear nuestro modelo, empezando con las convolucionales en 32 y terminando con un clasficador binario:")
             code = """modelo = Sequential()
 
 modelo.add(Conv2D(32, (3,3), input_shape = (218, 178, 1), padding = 'same', activation='relu'))
@@ -112,9 +109,10 @@ modelo.summary()"""
 
             st.code(body=code, language="python")
             st.write("Copilamos el modelo:")
-            code ="""modelo.compile(loss= 'binary_crossentropy', optimizer='adam', metrics= ['accuracy'])"""
+            code = """modelo.compile(loss= 'binary_crossentropy', optimizer='adam', metrics= ['accuracy'])"""
             st.code(body=code, language="python")
-            st.write("Para construir nuestra matriz X y vector hacemos una normalización de los datos de entrada. Además, vamos a generar imágenes modificando las que tenemos.")
+            st.write(
+                "Para construir nuestra matriz X y vector hacemos una normalización de los datos de entrada. Además, vamos a generar imágenes modificando las que tenemos.")
             code = """ train_datagen =  ImageDataGenerator(
     rescale = 1.0/255.0,
     rotation_range = 40, 
@@ -144,7 +142,8 @@ val_generator = val_datagen.flow_from_directory(
 
 print('Tenemos las clases', test_generator.class_indices)"""
             st.code(body=code, language="python")
-            st.write("Ahora, establecemos nuestros hiperparámetros antes de proceder a entrenar el modelo. Hemos elegido utilizar 15 épocas porque viendo nuestra curva de aprendizaje era lo mejor en este caso:")
+            st.write(
+                "Ahora, establecemos nuestros hiperparámetros antes de proceder a entrenar el modelo. Hemos elegido utilizar 15 épocas porque viendo nuestra curva de aprendizaje era lo mejor en este caso:")
             code = """batch_size = 20
 steps_per_epoch = train_generator.n // batch_size
 validation_steps = val_generator.n // batch_size
@@ -155,15 +154,11 @@ history = modelo.fit(train_generator,
                                validation_steps = validation_steps)"""
             st.code(body=code, language="python")
 
-
-
         if choice == "Modelo en producción":
-
             prueba()
 
             pass
         if choice == "Métricas":
-
             df = pd.read_csv(
                 "datos_f_m/Metricas.csv")
 
@@ -173,49 +168,41 @@ history = modelo.fit(train_generator,
             st.write(f"Accuracy: {accuracy}")
             st.write(f"Perdida: {loss}")
 
-
-
-
         if choice == "Gráficas":
-             tab1, tab2, tab3 = st.tabs(["Gráfica de los datos", "Accuracy", "Perdidas"])
+            tab1, tab2, tab3 = st.tabs(["Gráfica de los datos", "Accuracy", "Perdidas"])
 
-             df1 = pd.read_csv(
-                 "datos_f_m/datos_numero_fotos.csv")
+            df1 = pd.read_csv(
+                "datos_f_m/datos_numero_fotos.csv")
 
-             nuevos_nombres = {
-                 'cant_ima_entre_femenino': 'Entrenamiento imágenes mujer',
-                 'cant_ima_entre_masculino': 'Entrenamiento imágenes hombre',
-                 'cant_ima_val_femenino': 'Validación imágenes mujer',
-                 'cant_ima_val_masculino': 'Validación imágenes hombre',
-                 'cant_ima_test_femenino': 'Test imágenes mujer',
-                 'cant_ima_test_masculino': 'Test imágenes hombre',
-                 # Añade más pares de nombres de columnas originales y nuevos según sea necesario
-             }
+            nuevos_nombres = {
+                'cant_ima_entre_femenino': 'Entrenamiento imágenes mujer',
+                'cant_ima_entre_masculino': 'Entrenamiento imágenes hombre',
+                'cant_ima_val_femenino': 'Validación imágenes mujer',
+                'cant_ima_val_masculino': 'Validación imágenes hombre',
+                'cant_ima_test_femenino': 'Test imágenes mujer',
+                'cant_ima_test_masculino': 'Test imágenes hombre',
+                # Añade más pares de nombres de columnas originales y nuevos según sea necesario
+            }
 
-             df1 = df1.rename(columns=nuevos_nombres)
-             with tab1:
+            df1 = df1.rename(columns=nuevos_nombres)
+            with tab1:
+                fig_bar = px.bar(data_frame=df1,
+                                 text_auto=True)
+                fig_bar.update_yaxes(categoryorder="total ascending")
+                fig_bar.update_xaxes(title_text="Representación imágenes usadas")
+                fig_bar.update_yaxes(title_text="")
+                st.plotly_chart(fig_bar)
 
-                 fig_bar = px.bar(data_frame=df1,
-                                  text_auto=True)
-                 fig_bar.update_yaxes(categoryorder="total ascending")
-                 fig_bar.update_xaxes(title_text="Representación imágenes usadas")
-                 fig_bar.update_yaxes(title_text="")
-                 st.plotly_chart(fig_bar)
-
-
-
-
-             grafica1 = Image.open("datos_f_m/Performance de mi red neuronal2.png")
-             with tab2:
-                 st.image(image=grafica1,
-                          caption="Performance de la red neuronal",
-                          use_column_width=True)
-             grafica2 = Image.open("datos_f_m/Training and validation loss.png")
-             with tab3:
-                 st.image(image=grafica2,
-                          caption="Training and validation loss",
-                          use_column_width=True)
-
+            grafica1 = Image.open("datos_f_m/Performance de mi red neuronal2.png")
+            with tab2:
+                st.image(image=grafica1,
+                         caption="Performance de la red neuronal",
+                         use_column_width=True)
+            grafica2 = Image.open("datos_f_m/Training and validation loss.png")
+            with tab3:
+                st.image(image=grafica2,
+                         caption="Training and validation loss",
+                         use_column_width=True)
 
     if modelos == "Estimación de la edad en rangos":
         st.title("Estimación de la edad en rangos :baby_bottle:	:glass_of_milk::beer::wine_glass:")
@@ -228,38 +215,39 @@ history = modelo.fit(train_generator,
         choice = st.selectbox("**Información**", options=informacion)
         st.header(f"{choice}")
         if choice == "Información de los datos":
-            st.write("Para realizar el estudio de los rangos de edad, en primer lugar se ha entrenado el modelo para diferenciar entre sexos. Posteriormente, hemos generado un modelo"
-                     " de clasificación multiclase, donde diferenciamos cuatro rangos de edad. ")
+            st.write(
+                "Para realizar el estudio de los rangos de edad, en primer lugar se ha entrenado el modelo para diferenciar entre sexos. Posteriormente, hemos generado un modelo"
+                " de clasificación multiclase, donde diferenciamos cuatro rangos de edad. ")
 
             mapeo_edad = {0: (1, 14), 1: (15, 40), 2: (41, 60), 3: (61, 116)}
             df_mapeo_edad = pd.DataFrame.from_dict(mapeo_edad, orient='index', columns=['Edad mínima', 'Edad máxima'])
             st.dataframe(df_mapeo_edad)
 
-
-
-
-            st.write("Para ello hemos trabajado con distintos tipos de datos. En un primer momento, clasificamos a mano datos de fotos con un csv que contenía la información de la edad.")
+            st.write(
+                "Para ello hemos trabajado con distintos tipos de datos. En un primer momento, clasificamos a mano datos de fotos con un csv que contenía la información de la edad.")
             st.write(" A continuación mostramos el csv con la información:")
             df7 = pd.read_csv(
-                "datos_mod2/primer.csv",)
+                "datos_mod2/primer.csv", )
 
             st.dataframe(df7)
 
-
-            st.write("Los resultados obtenidos, tras la clasificación manual y el entrenamiento del modelo, no eran buenos, el modelo no entrenaba y por tanto las métricas no cambiaban. Determinamos la necesidad de incluir más datos para poder entrenar el modelo.")
+            st.write(
+                "Los resultados obtenidos, tras la clasificación manual y el entrenamiento del modelo, no eran buenos, el modelo no entrenaba y por tanto las métricas no cambiaban. Determinamos la necesidad de incluir más datos para poder entrenar el modelo.")
             st.write("Mostramos el resultado de los primeros datos de entrenamiento con accuracy constante:")
             image = Image.open(
                 "datos_mod2/acc.jpg")
             st.image(image=image,
                      caption="Estimación de la edad",
                      width=700)
-            st.write(" Despúes de procesar los datos, que no estaban clasificados, pasamos de entrenar un modelo de 3000 imágenes aproximadamente a 34000 imágenes. El modelo finalmente entrenó y mejoró las métricas. No obtuvimos un modelo con un accuracy eleveado"
-                     " pero contábamos con ello.")
+            st.write(
+                " Despúes de procesar los datos, que no estaban clasificados, pasamos de entrenar un modelo de 3000 imágenes aproximadamente a 34000 imágenes. El modelo finalmente entrenó y mejoró las métricas. No obtuvimos un modelo con un accuracy eleveado"
+                " pero contábamos con ello.")
             st.write("Este es el DataFrame con el que finalmente fue entrenado el modelo:")
             df8 = pd.read_csv("datos_mod2/data.csv")
 
             st.dataframe(df8)
-            st.write("El contenido del DataFrame se modificó para acceder a la edad y el sexo, información que estaba contenida en los primeros dígitos del nombre.")
+            st.write(
+                "El contenido del DataFrame se modificó para acceder a la edad y el sexo, información que estaba contenida en los primeros dígitos del nombre.")
 
             st.markdown("""A continuación mostramos las páginas donde hemos extraído los datos: 
                                         [Open KAGGEL](https://www.kaggle.com/datasets/jangedoo/utkface-new) y [Open APPA-REAL](https://chalearnlap.cvc.uab.es/dataset/26/description/)""")
@@ -268,14 +256,12 @@ history = modelo.fit(train_generator,
             df10 = pd.read_csv(
                 "datos_mod2/datos_num.csv")
 
-
             fig_bar = px.bar(data_frame=df10,
                              text_auto=True)
-            fig_bar.update_yaxes(categoryorder= None)
+            fig_bar.update_yaxes(categoryorder=None)
             fig_bar.update_xaxes(title_text="Representación imágenes usadas")
             fig_bar.update_yaxes(title_text="")
             st.plotly_chart(fig_bar)
-
 
             pass
         if choice == "Código del Modelo":
@@ -283,11 +269,11 @@ history = modelo.fit(train_generator,
             code = """datos_imagenes=[]
 
 for img in os.listdir(data):
-    
+
     img_path = f"{data}/{img}" 
-    
+
     datos_imagenes.append({'ruta':img_path,'img':img})
-    
+
 df_data = pd.DataFrame(datos_imagenes)
 
 
@@ -298,7 +284,7 @@ df_data.head(3)"""
 df_data['sexo']= df_data['img'].map(lambda x: x.split("_")[1])"""
             st.code(body=code, language="python")
             st.write("Creamos la columna edad:")
-            code =""" df_data['edad'] = [valor.split('_')[0] for valor in df_data['img']]"""
+            code = """ df_data['edad'] = [valor.split('_')[0] for valor in df_data['img']]"""
             st.code(body=code, language="python")
             st.write(" Mapeamos cada rango de edad a un número único:")
             code = """ mapeo_edad = {0: (1, 14), 1: (15, 40), 2: (41, 60), 3: (61, 116)}
@@ -316,7 +302,7 @@ y = []
 tamaño = (200, 200)
 
 for img_path, edad in zip (df_data['ruta'], df_data['edad']):
-            
+
     imagen_train = Image.open(img_path)
 
     imagen_resize = imagen_train.resize(tamaño)
@@ -326,7 +312,8 @@ for img_path, edad in zip (df_data['ruta'], df_data['edad']):
     y.append(asignar_rango_edad(int(edad)))
                  """
             st.code(body=code, language="python")
-            st.write("Para poder trabajar con estas imágenes tenemos que pasarlo a numpy y luego ya quedarnos con los datos de X e y . También separamos las variables:")
+            st.write(
+                "Para poder trabajar con estas imágenes tenemos que pasarlo a numpy y luego ya quedarnos con los datos de X e y . También separamos las variables:")
             code = """ X=np.array(X)
 y=np.array(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, random_state = 42)
@@ -425,28 +412,32 @@ history = modelo.fit(X_train, y_train, validation_data = (X_test, y_test), epoch
             "imagenes/edad_concreta.jpg")
         st.image(image=image,
                  caption="Estimación de la edad",
-                 width= 400)
+                 width=400)
 
         informacion = ["Información de los datos", "Código del Modelo", "Modelo en producción", "Métricas", "Gráficas"]
         choice = st.selectbox("**Información**", options=informacion)
         st.header(f"{choice}")
         if choice == "Información de los datos":
-            st.markdown("En este caso, hemos utilizado los datos del modelo de estimación de edad por rangos. Sin embargo, hemos incluído un modelo de regresión logística para poder predecir la edad exacta.")
-            st.write("No hemos obtenido métricas adecuadas para un buen uso del modelo, pero aún así hemos querido publicar el mismo para poder mostrar el trabajo y así,  ponerlo a prueba.")
-            st.write("La idea en un futuro, es poder modificar y añadir información para que el modelo sea más fiable y sensible.")
-            st.write("En los siguientes apartados del modelo, se podrá encontrar la información del mismo. En el caso de querer acceder a los datos usados de entrenamiento y test, se podrá acceder en el apartado del anterior modelo en Infomación de los Datos")
-            
+            st.markdown(
+                "En este caso, hemos utilizado los datos del modelo de estimación de edad por rangos. Sin embargo, hemos incluído un modelo de regresión logística para poder predecir la edad exacta.")
+            st.write(
+                "No hemos obtenido métricas adecuadas para un buen uso del modelo, pero aún así hemos querido publicar el mismo para poder mostrar el trabajo y así,  ponerlo a prueba.")
+            st.write(
+                "La idea en un futuro, es poder modificar y añadir información para que el modelo sea más fiable y sensible.")
+            st.write(
+                "En los siguientes apartados del modelo, se podrá encontrar la información del mismo. En el caso de querer acceder a los datos usados de entrenamiento y test, se podrá acceder en el apartado del anterior modelo en Infomación de los Datos")
+
             pass
         if choice == "Código del Modelo":
             st.write("Sacamos las imágenes del data y los datos asociados a ello en un DataFrame:")
             code = """ datos_imagenes=[]
 
 for img in os.listdir(data):
-    
+
     img_path = f"{data}/{img}" 
-    
+
     datos_imagenes.append({'ruta':img_path,'img':img})
-    
+
 df_data = pd.DataFrame(datos_imagenes)
 
 
@@ -465,7 +456,7 @@ y = []
 tamaño = (200, 200)
 
 for img_path, edad in zip (df_data['ruta'], df_data['edad']):
-            
+
     imagen_train = Image.open(img_path)
 
     imagen_resize = imagen_train.resize(tamaño)
@@ -524,7 +515,7 @@ modelo.summary()"""
             df11 = pd.read_csv(
                 "m_regresion/Scores_regresion.csv")
 
-            mse= df11['0'].iloc[0]
+            mse = df11['0'].iloc[0]
             mae = df11['0'].iloc[1]
 
             st.write(f"MSE: {mse}")
@@ -533,7 +524,8 @@ modelo.summary()"""
 
             pass
         if choice == "Gráficas":
-            tab1, tab2, tab3, tab4 = st.tabs(["Mae", "Diagrama de dispersión", "Función de pérdida", "Performance del modelo de regresión"])
+            tab1, tab2, tab3, tab4 = st.tabs(
+                ["Mae", "Diagrama de dispersión", "Función de pérdida", "Performance del modelo de regresión"])
 
             with tab1:
                 gra1 = Image.open(
@@ -543,7 +535,7 @@ modelo.summary()"""
                          use_column_width=True)
             with tab2:
                 gra2 = Image.open(
-                     "m_regresion/dispersion.jpeg")
+                    "m_regresion/dispersion.jpeg")
                 st.image(image=gra2,
                          caption="Diagrama de dispersión",
                          use_column_width=True)
@@ -551,14 +543,14 @@ modelo.summary()"""
                 gra3 = Image.open(
                     "m_regresion/perdida.jpeg")
                 st.image(image=gra3,
-                             caption="Función de pérdida",
-                             use_column_width=True)
+                         caption="Función de pérdida",
+                         use_column_width=True)
             with tab4:
                 gra4 = Image.open(
                     "m_regresion/performance.jpeg")
                 st.image(image=gra4,
-                             caption="Performance del modelo de regresión",
-                             use_column_width=True)
+                         caption="Performance del modelo de regresión",
+                         use_column_width=True)
 
 
 if __name__ == "__main__":
