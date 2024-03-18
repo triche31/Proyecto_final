@@ -17,7 +17,7 @@ from m_imagenes import m_imagenes
 
 
 def main():
-    menu = ["Introducción", "Modelo CNN", "Muestra aleatoria de imagenes", "Tipos de modelo", "Final"]
+    menu = ["Introducción", "Modelo CNN", "Muestra aleatoria de imagenes", "Tipos de modelo", "Final","Nuestro equipo"]
 
     st.set_page_config(page_title="CNN",
                        page_icon=":star2:",
